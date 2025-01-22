@@ -42,6 +42,9 @@ public class BalanceCache {
     @Autowired
     private TransactionRepository dbRepo;
 
+    // Global variable, potentially unnecessary
+    int globalCounter = 0;
+
     /**
      * Initializes the LoadingCache for the BalanceReaderController
      *
@@ -59,11 +62,11 @@ public class BalanceCache {
                 throws ResourceAccessException,
                 DataAccessResourceFailureException {
                 LOGGER.debug("Cache loaded from db");
-                Long balance = dbRepo.findBalance(accountId, localRoutingNum);
-                if (balance == null) {
-                    balance = 0L;
+                Long Balance = dbRepo.findBalance(accountId, localRoutingNum);
+                if (Balance == null) {
+                    Balance = 0L;
                 }
-                return balance;
+                return Balance;
             }
         };
         return CacheBuilder.newBuilder()

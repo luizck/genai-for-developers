@@ -40,6 +40,9 @@ from rich.table import Table
 
 from .constants import USER_AGENT, MODEL_NAME
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def ensure_env_variable(var_name):
     """Ensure an environment variable is set."""
@@ -192,12 +195,14 @@ Provide an overview or overall impression entry for the code as the first entry.
             
             ### Example Dialogue ###
             <query> First questions are to detect violations of coding style guidelines and conventions. Identify inconsistent formatting, naming conventions, indentation, comment placement, and other style-related issues. Provide suggestions or automatically fix the detected violations to maintain a consistent and readable codebase if this is a problem.
-                    import "fmt"
-                    
-                    func main() {{
-                        name := "Alice"
-                        greeting := fmt.Sprintf("Hello, %s!", name)
-                        fmt.Println(greeting)
+                    package org.example;
+
+                    public class Main {{
+                        public static void main(String[] args) {{
+                            var name = "Alice";
+                            var greeting = String.format("Hello, %s!", name);
+                            System.out.println(greeting);
+                        }}
                     }}
                     
                     
@@ -205,7 +210,7 @@ Provide an overview or overall impression entry for the code as the first entry.
                         {{
                             "question": "Indentation",
                             "answer": "yes",
-                            "description": "Code is consistently indented with spaces (as recommended by Effective Go)"
+                            "description": "Code is consistently indented with spaces (as recommended by Effective Java)"
                         }},
                         {{
                             "question": "Variable Naming",
@@ -227,39 +232,36 @@ Provide an overview or overall impression entry for the code as the first entry.
                     
                     <query> Identify common issues such as code smells, anti-patterns, potential bugs, performance bottlenecks, and security vulnerabilities. Offer actionable recommendations to address these issues and improve the overall quality of the code.
                     
-                    "package main
+                    "package org.example;
+
+                    public class Main {{
+
+                        // Global variable, potentially unnecessary
+                        int globalCounter = 0;
                     
-                    import (
-                        "fmt"
-                        "math/rand"
-                        "time"
-                    )
-                    
-                    // Global variable, potentially unnecessary 
-                    var globalCounter int = 0 
-                    
-                    func main() {{
-                        items := []string{{"apple", "banana", "orange"}}
-                    
-                        // Very inefficient loop with nested loop for a simple search
-                        for _, item := range items {{
-                            for _, search := range items {{
-                                if item == search {{
-                                    fmt.Println("Found:", item)
+                        public static void main(String[] args) throws InterruptedException {{
+                            var items = new String[]{{"apple", "banana", "orange"}};
+
+                            // Very inefficient loop with nested loop for a simple search
+                            for (var item : items) {{
+                                for (var search : items) {{
+                                    if (item.equals(search)) {{
+                                        System.out.println("Found:"+ item);
+                                    }}
                                 }}
                             }}
+
+                            // Sleep without clear reason, potential performance bottleneck
+                            Thread.sleep(5000);
+
+                            calculateAndPrint(10);
                         }}
                     
-                        // Sleep without clear reason, potential performance bottleneck
-                        time.Sleep(5 * time.Second) 
-                    
-                        calculateAndPrint(10)
-                    }}
-                    
-                    // Potential divide-by-zero risk
-                    func calculateAndPrint(input int) {{
-                        result := 100 / input 
-                        fmt.Println(result)
+                        // Potential divide-by-zero risk
+                        static void calculateAndPrint(int input) {{
+                            var result = 100 / input;
+                            System.out.println(result);
+                        }}
                     }}"
                     
                     <response> [
@@ -276,7 +278,7 @@ Provide an overview or overall impression entry for the code as the first entry.
                         {{
                             "question": "Performance Bottlenecks",
                             "answer": "no",
-                            "description": "'time.Sleep' without justification introduces a potential performance slowdown. Remove it if the delay is unnecessary or provide context for its use."
+                            "description": "'Thread.sleep' without justification introduces a potential performance slowdown. Remove it if the delay is unnecessary or provide context for its use."
                         }},
                         {{
                             "question": "Potential Bugs",
@@ -293,6 +295,10 @@ Provide an overview or overall impression entry for the code as the first entry.
             '''
     # Load files as text into the source variable
     source = source.format(format_files_as_string(context))
+
+    logger.info('=============================')
+    logger.info(qry)
+    logger.info('=============================')
 
     code_chat_model = GenerativeModel(MODEL_NAME)
     with telemetry.tool_context_manager(USER_AGENT):
