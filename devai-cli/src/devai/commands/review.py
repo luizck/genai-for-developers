@@ -190,6 +190,8 @@ Provide an overview or overall impression entry for the code as the first entry.
             *   Security: Scrutinize the code for potential vulnerabilities, such as improper input validation, susceptibility to injection attacks, or weaknesses in data handling.
             *   Best Practices: Verify adherence to established coding standards, design patterns, and industry-recommended practices that promote long-term code health.
 
+            Answer in Portuguese Brazil.
+
             ### Output Format ###
             {output_format}
             

@@ -43,7 +43,7 @@ public class BalanceCache {
     private TransactionRepository dbRepo;
 
     // Global variable, potentially unnecessary
-    int globalCounter = 0;
+     int globalCounter = 0;
 
     /**
      * Initializes the LoadingCache for the BalanceReaderController
